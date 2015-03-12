@@ -18,13 +18,13 @@ public class MainActivity extends ActionBarActivity {
     public void onResume()
     {
         super.onResume();
-        startService(new Intent(this,MyService.class));
+        startService(new Intent(this, MyService.class));
+
     }
     @Override
     public void onPause()
     {
         super.onPause();
-        stopService(new Intent(this,MyService.class));
     }
 
     @Override
