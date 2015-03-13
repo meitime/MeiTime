@@ -8,15 +8,20 @@ import android.view.MenuItem;
 
 
 public class MainActivity extends ActionBarActivity {
-
+    private boolean isInFront=false;
+    Thread thread;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        findViewById(R.id.mainview).setBackgroundResource(R.drawable.defaultbackground);
     }
     @Override
     public void onResume()
     {
+        isInFront=true;
+        thread=new Thread(new ProgressRunable());
+        thread.start();
         super.onResume();
         startService(new Intent(this, MyService.class));
 
@@ -24,6 +29,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public void onPause()
     {
+        isInFront=false;
         super.onPause();
     }
 
@@ -47,5 +53,25 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    class ProgressRunable implements Runnable
+    {
+        @Override
+        public void run() {
+            long seconds=getApplicationContext().getSharedPreferences("time",MODE_PRIVATE).getLong("TODAY_TIME_USED",0)/1000;
+            int screenon_frequency=getApplicationContext().getSharedPreferences("time",MODE_PRIVATE).getInt("screenon_frequency",0);
+            MainView mainView=(MainView)findViewById(R.id.mainview);
+
+            while(isInFront)
+            {
+                mainView.setTime(seconds,screenon_frequency);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                seconds++;
+            }
+        }
     }
 }

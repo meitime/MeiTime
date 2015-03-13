@@ -58,6 +58,7 @@ public class MyService extends Service {
                 t.setToNow();
                 Log.i("meitime","screen on at "+t.format2445());
                 mEditor.putLong("SCREEN_ON_TIME",t.toMillis(false));
+                mEditor.putInt("screenon_frequency",mSharedPreferences.getInt("screenon_frequency",1)+1);
                 mEditor.commit();
             }
             else if(intent.getAction().equals(Intent.ACTION_SCREEN_OFF))
